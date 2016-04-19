@@ -1,0 +1,18 @@
+﻿
+Game objective: Kill everyone !!!
+Attack enemy by enter in its position.
+Characters info:
+- P - current player position
+- H - health potion (large, medium or small)
+- O - ork (enemy)
+- F - fairy (enemy)
+- N - ninja (enemy)
+Commands list:
+- help - displays basic game info and commands.
+- map - displays the map.
+- move - enter player movement mode (use arrow keys to move). Press ESC or any other key to quit this mode and enter new command.
+- heal - heal the player. Choose health potion type to use (large = 100 points, medium = 75 points, small = 50 points).
+- status - display the current player status (damage, health, potions).
+- enemies - display info about the enemies on the map.
+- clear - clears the screen.
+- exit - run like a little girl !

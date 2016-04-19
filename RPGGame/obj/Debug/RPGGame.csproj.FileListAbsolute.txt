@@ -1,0 +1,6 @@
+C:\Users\PC\Desktop\SoftUni Projects\RPGGame\RPGGame\bin\Debug\RPGGame.exe.config
+C:\Users\PC\Desktop\SoftUni Projects\RPGGame\RPGGame\obj\Debug\RPGGame.csprojResolveAssemblyReference.cache
+C:\Users\PC\Desktop\SoftUni Projects\RPGGame\RPGGame\bin\Debug\RPGGame.exe
+C:\Users\PC\Desktop\SoftUni Projects\RPGGame\RPGGame\bin\Debug\RPGGame.pdb
+C:\Users\PC\Desktop\SoftUni Projects\RPGGame\RPGGame\obj\Debug\RPGGame.exe
+C:\Users\PC\Desktop\SoftUni Projects\RPGGame\RPGGame\obj\Debug\RPGGame.pdb
