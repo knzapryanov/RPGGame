@@ -43,7 +43,7 @@ namespace RPGGame.Characters
                     break;
                 case PlayerRace.Alcoholic:
                     this.Damage = 170;
-                    this.Health = 100;
+                    this.Health = 130;
                     break;
                 default:
                     throw new ArgumentException("Unknown player race!");
@@ -98,24 +98,7 @@ namespace RPGGame.Characters
                 throw new NotEnoughHealthPotionsException("Not enough health potions!");
             }
 
-            int maxPlayerHealth = 0;
-            switch (this.Race)
-            {
-                case PlayerRace.Elf:
-                    maxPlayerHealth = 200;
-                    break;
-                case PlayerRace.Human:
-                    maxPlayerHealth = 150;
-                    break;
-                case PlayerRace.Dwarf:
-                    maxPlayerHealth = 250;
-                    break;
-                case PlayerRace.Alcoholic:
-                    maxPlayerHealth = 100;
-                    break;
-                default:
-                    break;
-            }
+            int maxPlayerHealth = this.GetPlayerMaximumHealth();
 
             int currentPlayerHealth = this.Health;
             if ((currentPlayerHealth += healthPotion.HealthRestoreAmount) >= maxPlayerHealth)
@@ -130,6 +113,30 @@ namespace RPGGame.Characters
             }            
                         
             this.inventory.Remove(healthPotion);
+        }
+
+        public int GetPlayerMaximumHealth()
+        {
+            int maxPlayerHealth = 0;
+            switch (this.Race)
+            {
+                case PlayerRace.Elf:
+                    maxPlayerHealth = 200;
+                    break;
+                case PlayerRace.Human:
+                    maxPlayerHealth = 150;
+                    break;
+                case PlayerRace.Dwarf:
+                    maxPlayerHealth = 250;
+                    break;
+                case PlayerRace.Alcoholic:
+                    maxPlayerHealth = 130;
+                    break;
+                default:
+                    break;
+            }
+
+            return maxPlayerHealth;
         }
 
         public int Experiance
