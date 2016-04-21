@@ -13,5 +13,7 @@ namespace RPGGame.Interfaces
         PlayerRace Race { get; set; }
 
         string GetPlayerCurrentStatus();
+
+        int GetPlayerMaximumHealth();
     }
 }
