@@ -305,7 +305,7 @@ namespace RPGGame.Engine
         private void MovePlayer()
         {
             this.renderer.WriteLine(String.Empty);
-            this.renderer.WriteLine("Player health: {0}", this.player.Health);
+            this.renderer.WriteLine("Player health: {0} Maximum health: {1}", this.player.Health, this.player.GetPlayerMaximumHealth());
             this.renderer.WriteLine(String.Empty);
             this.PrintMap();
             string moveCommand = String.Empty;
@@ -372,7 +372,7 @@ namespace RPGGame.Engine
                 }
 
                 this.renderer.WriteLine(String.Empty);
-                this.renderer.WriteLine("Player health: {0}", this.player.Health);
+                this.renderer.WriteLine("Player health: {0} Maximum health: {1}", this.player.Health, this.player.GetPlayerMaximumHealth());
                 this.renderer.WriteLine(String.Empty);
                 this.PrintMap();
                 userInput = Console.ReadKey();
@@ -423,6 +423,62 @@ namespace RPGGame.Engine
 
         private void ShowEnemiesStatus()
         {
+            List<Character> fairies = new List<Character>();
+            List<Character> ninjas = new List<Character>();
+            List<Character> orks = new List<Character>();
+            foreach (var enemy in enemies)
+            {
+                if (enemy is Fairy)
+                {
+                    fairies.Add(enemy);
+                }
+                else if (enemy is Ninja)
+                {
+                    ninjas.Add(enemy);
+                }
+                else
+                {
+                    orks.Add(enemy);
+                }
+            }
+
+            this.renderer.WriteLine(String.Empty);
+            this.renderer.WriteLine("Fairies:");
+            foreach (var fairy in fairies)
+            {
+                this.renderer.WriteLine("Position: Col = {0}, Row = {1} Name: {2} Health: {3} Damage: {4}",
+                    fairy.Position.X,
+                    fairy.Position.Y,
+                    fairy.Name,
+                    fairy.Health,
+                    fairy.Damage
+                    );
+            }
+            this.renderer.WriteLine(String.Empty);
+            this.renderer.WriteLine("Ninjas:");
+            foreach (var ninja in ninjas)
+            {
+                this.renderer.WriteLine("Position: Col = {0}, Row = {1} Name: {2} Health: {3} Damage: {4}",
+                    ninja.Position.X,
+                    ninja.Position.Y,
+                    ninja.Name,
+                    ninja.Health,
+                    ninja.Damage
+                    );
+            }
+            this.renderer.WriteLine(String.Empty);
+            this.renderer.WriteLine("Orks:");
+            foreach (var ork in orks)
+            {
+                this.renderer.WriteLine("Position: Col = {0}, Row = {1} Name: {2} Health: {3} Damage: {4}",
+                    ork.Position.X,
+                    ork.Position.Y,
+                    ork.Name,
+                    ork.Health,
+                    ork.Damage
+                    );
+            }
+            this.renderer.WriteLine(String.Empty);
             this.renderer.WriteLine("{0} enemies left.", enemies.Count);
         }
 
