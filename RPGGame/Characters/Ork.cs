@@ -11,7 +11,7 @@ namespace RPGGame.Characters
     [Enemy]
     public class Ork : Character
     {
-        private const int OrkDamage = 30;
+        private const int OrkDamage = 90;
         private const int OrkHealth = 280;
         private const char OrkSymbol = 'O';
 
