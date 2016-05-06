@@ -12,18 +12,53 @@ namespace RPGGame.Characters
 
     class Player : Character, IPlayer
     {
-        private const int PlayerDamage = 100;
-        private const int PlayerHealth = 500;
+        private const int PlayerDefaultDamage = 100;
+        private const int PlayerDefaultHealth = 500;
+        private int experience;
+        private int levelUpCap;
+        private int level;
+        private int levelUpCapIncreaseStep;
+        private int playerMaximumHealth;
 
         private List<Item> inventory;
 
         public Player(Position position, char playerSymbol, string name, PlayerRace race)
-            : base(position, playerSymbol, name, PlayerDamage, PlayerHealth)
+            : base(position, playerSymbol, name, PlayerDefaultDamage, PlayerDefaultHealth)
         {
             this.Race = race;
             this.inventory = new List<Item>();
+            this.Experiance = 0;
+            this.LevelUpCap = 200;
+            this.Level = 0;
+            this.LevelUpCapIncreaseStep = 50;
+            this.PlayerMaximumHealth = this.GetPlayerMaximumHealth();
             this.SetPlayerStats();
         }
+
+        public PlayerRace Race
+        {
+            get;
+            set;
+        }
+
+        public IEnumerable<Item> Inventory
+        {
+            get { return this.inventory; }
+        }
+
+        public int Experiance
+        {
+            get { return this.experience; }
+            set { this.experience = value; }
+        }
+
+        public int LevelUpCap { get; set; }
+
+        public int Level { get; set; }
+
+        public int LevelUpCapIncreaseStep { get; set; }
+
+        public int PlayerMaximumHealth { get; set; }
 
         private void SetPlayerStats()
         {
@@ -50,8 +85,6 @@ namespace RPGGame.Characters
             }
         }
 
-        public PlayerRace Race { get; set; }
-
         public void Move(string direction)
         {
             switch (direction)
@@ -71,11 +104,6 @@ namespace RPGGame.Characters
                 default:
                     throw new ArgumentException("Wrong direction!");
             }
-        }
-
-        public IEnumerable<Item> Inventory
-        {
-            get { return this.inventory; }
         }
 
         public HealthPotionSize AddHealthPotionToInventory(Items.Item item)
@@ -98,7 +126,7 @@ namespace RPGGame.Characters
                 throw new NotEnoughHealthPotionsException("Not enough health potions!");
             }
 
-            int maxPlayerHealth = this.GetPlayerMaximumHealth();
+            int maxPlayerHealth = this.PlayerMaximumHealth; //this.GetPlayerMaximumHealth();
 
             int currentPlayerHealth = this.Health;
             if ((currentPlayerHealth += healthPotion.HealthRestoreAmount) >= maxPlayerHealth)
@@ -139,24 +167,16 @@ namespace RPGGame.Characters
             return maxPlayerHealth;
         }
 
-        public int Experiance
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public void LevelUp()
-        {
-            throw new NotImplementedException();
-        }
-
         public override string ToString()
         {
-            return string.Format("Player {0} ({1}): Damage ({2}), Health ({3}), Number of health potions ({4})",
+            return string.Format("Player {0} ({1}): Damage ({2}), Health ({3}), Maximum health ({4}), Experiance ({5}), Experience needed for next level: ({6})",
                 this.Name,
                 this.Race,
                 this.Damage,
                 this.Health,
-                this.Inventory.Count()
+                this.PlayerMaximumHealth,
+                this.Experiance,
+                this.LevelUpCap
                 );
         }
 
@@ -188,15 +208,71 @@ namespace RPGGame.Characters
                 }
             }
 
-            return string.Format("Player {0} ({1}): Damage ({2}), Health ({3}), Health potions: ({4} Large, {5} Medium, {6} Small)",
+            return string.Format("Player {0} ({1}): Experiance ({2}) Damage ({3}), Health ({4}), Health potions: ({5} Large, {6} Medium, {7} Small)",
                 this.Name,
                 this.Race,
+                this.Experiance,
                 this.Damage,
                 this.Health,
                 largePotionsCount,
                 mediumPotionsCount,
                 smallPotionsCount
                 );
+        }
+
+        public override void Attack(ICharacter enemy)
+        {
+            enemy.Health -= this.Damage;
+        }
+
+        public void GainExperience(ICharacter enemy)
+        {
+            if (enemy is Fairy)
+            {
+                this.Experiance += 100;
+            }
+            else if (enemy is Ninja)
+            {
+                this.Experiance += 200;
+            }
+            else
+            {
+                this.Experiance += 150;
+            }
+
+            if (this.Experiance >= this.LevelUpCap)
+            {
+                this.LevelUp();
+            }
+        }
+
+        public void LevelUp()
+        {
+            string playerStatsBoostChoice = String.Empty;
+
+            Console.WriteLine();
+            Console.WriteLine("Level Up !!!");
+            Console.WriteLine("You are level {0} !", this.Level + 1);
+            Console.WriteLine("Choose what do you want to increase: 1 for Damage, 2 for Health :");
+            playerStatsBoostChoice = Console.ReadLine();
+
+            switch (playerStatsBoostChoice)
+            {
+                case "1":
+                    this.Damage += 30;
+                    break;
+                case "2":
+                    this.PlayerMaximumHealth += 30;
+                    break;
+                default:
+                    Console.WriteLine("Invalid choice!");
+                    this.LevelUp();
+                    break;
+            }
+
+            this.Level++;
+            this.LevelUpCap = (this.LevelUpCap * 2) + this.LevelUpCapIncreaseStep;
+            this.LevelUpCapIncreaseStep += 50;
         }
     }
 }
