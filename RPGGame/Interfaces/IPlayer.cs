@@ -14,6 +14,6 @@ namespace RPGGame.Interfaces
 
         string GetPlayerCurrentStatus();
 
-        int GetPlayerMaximumHealth();
+        int GetPlayerMaximumHealth();        
     }
 }

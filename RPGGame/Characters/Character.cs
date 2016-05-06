@@ -49,7 +49,7 @@ namespace RPGGame.Characters
             set;
         }
 
-        public void Attack(ICharacter enemy)
+        public virtual void Attack(ICharacter enemy)
         {
             enemy.Health -= this.Damage;
         }
