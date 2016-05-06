@@ -1,12 +1,20 @@
 ﻿
 Game objective: Kill everyone !!!
 Attack enemy by enter in its position.
+You can level up.
+You can choose to increase damage or maximum health on level up.
+Every enemy have different experiance reward:
+- Fairy - 100 experience
+- Ork - 150 experience
+- Ninja - 200 experience
+
 Characters info:
 - P - current player position
 - H - health potion (large, medium or small)
 - O - ork (enemy)
 - F - fairy (enemy)
 - N - ninja (enemy)
+
 Commands list:
 - help - displays basic game info and commands.
 - map - displays the map.
@@ -16,3 +24,5 @@ Commands list:
 - enemies - display info about the enemies on the map.
 - clear - clears the screen.
 - exit - run like a little girl !
+
+Scroll up to read the whole info.
