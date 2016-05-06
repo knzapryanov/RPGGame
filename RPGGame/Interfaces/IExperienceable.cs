@@ -11,5 +11,7 @@ namespace RPGGame.Interfaces
         int Experiance { get; }
 
         void LevelUp();
+
+        void GainExperience(ICharacter enemy);
     }
 }
