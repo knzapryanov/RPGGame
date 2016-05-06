@@ -19,7 +19,7 @@ namespace RPGGame.Engine
         public const int mapWidth = 10;
         public const int mapHeight = 10;
         private const int InitalNumberOfEnemies = 10;
-        private const int InitialNumberOfItems = 5;
+        private const int InitialNumberOfItems = 7;
 
         private static Random Rand = new Random();
 
@@ -305,7 +305,7 @@ namespace RPGGame.Engine
         private void MovePlayer()
         {
             this.renderer.WriteLine(String.Empty);
-            this.renderer.WriteLine("Player health: {0} Maximum health: {1}", this.player.Health, this.player.GetPlayerMaximumHealth());
+            this.renderer.WriteLine(this.player.ToString());
             this.renderer.WriteLine(String.Empty);
             this.PrintMap();
             string moveCommand = String.Empty;
@@ -372,7 +372,7 @@ namespace RPGGame.Engine
                 }
 
                 this.renderer.WriteLine(String.Empty);
-                this.renderer.WriteLine("Player health: {0} Maximum health: {1}", this.player.Health, this.player.GetPlayerMaximumHealth());
+                this.renderer.WriteLine(this.player.ToString());
                 this.renderer.WriteLine(String.Empty);
                 this.PrintMap();
                 userInput = Console.ReadKey();
@@ -395,12 +395,17 @@ namespace RPGGame.Engine
             if (enemy.Health <= 0)
             {
                 this.renderer.WriteLine("Enemy killed!");
+                this.player.GainExperience(enemy);
+
                 this.enemies.Remove(enemy as Character);
+
                 if (enemies.Count == 0)
                 {
                     this.IsRunning = false;
                     this.renderer.WriteLine(String.Empty);
                     this.renderer.WriteLine("Victory! All enemies are dead.");
+                    this.renderer.WriteLine("Press any key to quit!");
+                    Console.ReadKey();
                     this.renderer.WriteLine(String.Empty);
                 }
                 return;
@@ -418,6 +423,8 @@ namespace RPGGame.Engine
             {
                 this.IsRunning = false;
                 this.renderer.WriteLine("You died !");
+                this.renderer.WriteLine("Press any key to quit!");
+                Console.ReadKey();
             }
         }
 
