@@ -1,15 +1,23 @@
 ﻿
+-------------------------------------------------------------------------
 Game objective: Kill everyone !!!
 Attack enemy by enter in its position.
 You can level up.
-You can choose to increase damage or maximum health on level up.
+You can choose to increase damage (+30) or maximum health (+30) on level up.
 Every enemy have different experiance reward:
 - Fairy - 100 experience
 - Ork - 150 experience
 - Ninja - 200 experience
 
+You can collect and equip a sword to increase the player damage.
+Only one sword can be equipped at a time.
+Every sword have different damage and durability.
+One attack cost one sword durability.
+The sword is broken (you can collect another one) when the durability reaches 0.
+
 Characters info:
 - P - current player position
+- S - sword
 - H - health potion (large, medium or small)
 - O - ork (enemy)
 - F - fairy (enemy)
@@ -18,11 +26,12 @@ Characters info:
 Commands list:
 - help - displays basic game info and commands.
 - map - displays the map.
-- move - enter player movement mode (use arrow keys to move). Press ESC or any other key to quit this mode and enter new command.
+- move - enter player movement mode (use arrow keys on the keyboard to move - one click = one position move). Press ESC or any other key to quit this mode and enter new command.
 - heal - heal the player. Choose health potion type to use (large = 100 points, medium = 75 points, small = 50 points).
-- status - display the current player status (damage, health, potions).
+- potions - display the current player potions info (large, medium, small).
 - enemies - display info about the enemies on the map.
 - clear - clears the screen.
 - exit - run like a little girl !
 
 Scroll up to read the whole info.
+-------------------------------------------------------------------------
