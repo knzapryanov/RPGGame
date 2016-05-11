@@ -12,7 +12,7 @@ namespace RPGGame.Characters
     public class Ninja : Character
     {
         private const int NinjaDamage = 120;
-        private const int NinjaHealth = 300;
+        private const int NinjaHealth = 350;
         private const char NinjaSymbol = 'N';
 
         public Ninja(Position position, string name)
