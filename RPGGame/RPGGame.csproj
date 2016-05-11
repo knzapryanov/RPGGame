@@ -66,6 +66,7 @@
     <Compile Include="Items\HealthPotionSize.cs" />
     <Compile Include="Items\Item.cs" />
     <Compile Include="Items\ItemState.cs" />
+    <Compile Include="Items\Sword.cs" />
     <Compile Include="Position.cs" />
     <Compile Include="RPGGame.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

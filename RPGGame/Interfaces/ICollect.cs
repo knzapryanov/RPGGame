@@ -12,6 +12,6 @@ namespace RPGGame.Interfaces
     {
         IEnumerable<Item> Inventory { get; }
 
-        HealthPotionSize AddHealthPotionToInventory(Item item);
+        
     }
 }
