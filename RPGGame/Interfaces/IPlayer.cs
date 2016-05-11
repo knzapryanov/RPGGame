@@ -7,13 +7,20 @@ using System.Threading.Tasks;
 namespace RPGGame.Interfaces
 {
     using Characters;
+    using Items;
 
     public interface IPlayer : ICharacter, IMoveable, ICollect, IHeal, IExperienceable
     {
         PlayerRace Race { get; set; }
 
-        string GetPlayerCurrentStatus();
+        string GetPlayerPotionsInfo();
 
-        int GetPlayerMaximumHealth();        
+        int GetPlayerMaximumHealth();
+
+        HealthPotionSize AddHealthPotionToInventory(Item item);
+
+        string AddSwordToInventory(Item item);
+
+        bool HaveSword();
     }
 }

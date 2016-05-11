@@ -16,10 +16,11 @@ namespace RPGGame.Engine
 
     public class GameEngine
     {
-        public const int mapWidth = 10;
+        public const int mapWidth = 15;
         public const int mapHeight = 10;
         private const int InitalNumberOfEnemies = 10;
-        private const int InitialNumberOfItems = 7;
+        private const int InitialNumberOfPotions = 7;
+        private const int InitialNumberOfSwords = 2;
 
         private static Random Rand = new Random();
 
@@ -37,8 +38,20 @@ namespace RPGGame.Engine
             "Tazingo"
         };
 
+        private readonly string[] swordsNames =
+        {
+            "The Ambassador",
+            "Stormbringer",
+            "Azurewrath",
+            "Dragon's Blade",
+            "Honor's Razor",
+            "Recruit's Silver Etcher",
+            "Savage Diamond Reaver"
+        };
+
         private readonly IList<Character> enemies;
-        private readonly IList<Item> items;
+        private readonly IList<Item> potions;
+        private readonly IList<Item> swords;
 
         private IPlayer player;
 
@@ -47,7 +60,8 @@ namespace RPGGame.Engine
             this.reader = reader;
             this.renderer = renderer;
             this.enemies = new List<Character>();
-            this.items = new List<Item>();
+            this.potions = new List<Item>();
+            this.swords = new List<Item>();
         }
 
         public bool IsRunning { get; private set; }
@@ -62,9 +76,11 @@ namespace RPGGame.Engine
             this.player = new Player(new Position(0, 0), 'P', playerName, playerRace);
 
             this.PopulateEnemies();
-            this.PopulateItems();
+            this.PopulatePotions();
+            this.PopulateSwords();
 
             this.ExecuteHelpCommand();
+
             while (this.IsRunning)
             {                
                 this.renderer.WriteLine(Environment.NewLine + "Enter command:");
@@ -105,8 +121,8 @@ namespace RPGGame.Engine
                 case "heal":
                     this.HealPlayer();
                     break;
-                case "status":
-                    this.ShowPlayerStatus();
+                case "potions":
+                    this.ShowPlayerPotionsInfo();
                     break;
                 case "enemies":
                     this.ShowEnemiesStatus();
@@ -218,10 +234,10 @@ namespace RPGGame.Engine
             bool containsEnemy = this.enemies
                 .Any(e => e.Position.X == currentX && e.Position.Y == currentY);
 
-            bool containsItem = this.items
+            bool containsPotion = this.potions
                 .Any(i => i.Position.X == currentX && i.Position.Y == currentY);
 
-            while (containsEnemy || containsItem)
+            while (containsEnemy || containsPotion)
             {
                 currentX = Rand.Next(1, mapWidth);
                 currentY = Rand.Next(1, mapHeight);
@@ -229,7 +245,7 @@ namespace RPGGame.Engine
                 containsEnemy = this.enemies
                     .Any(e => e.Position.X == currentX && e.Position.Y == currentY);
 
-                containsItem = this.items
+                containsPotion = this.potions
                     .Any(i => i.Position.X == currentX && i.Position.Y == currentY);
             }
 
@@ -255,12 +271,58 @@ namespace RPGGame.Engine
             return new HealthPotion(new Position(currentX, currentY), healthPotionSize);            
         }
 
-        private void PopulateItems()
+        private Sword CreateSword()
         {
-            for (int i = 0; i < InitialNumberOfItems; i++)
+            int currentX = Rand.Next(1, mapWidth);
+            int currentY = Rand.Next(1, mapHeight);
+
+            bool containsEnemy = this.enemies
+                .Any(e => e.Position.X == currentX && e.Position.Y == currentY);
+
+            bool containsPotion = this.potions
+                .Any(i => i.Position.X == currentX && i.Position.Y == currentY);
+
+            bool containsSword = this.swords
+                .Any(s => s.Position.X == currentX && s.Position.Y == currentY);
+
+            while (containsEnemy || containsPotion || containsSword)
+            {
+                currentX = Rand.Next(1, mapWidth);
+                currentY = Rand.Next(1, mapHeight);
+
+                containsEnemy = this.enemies
+                    .Any(e => e.Position.X == currentX && e.Position.Y == currentY);
+
+                containsPotion = this.potions
+                    .Any(i => i.Position.X == currentX && i.Position.Y == currentY);
+
+                containsSword = this.swords
+                .Any(s => s.Position.X == currentX && s.Position.Y == currentY);
+            }
+
+            int swordDamage = Rand.Next(30, 90);
+            int swordDurability = Rand.Next(2, 5);
+            string swordName = this.swordsNames[Rand.Next(0, this.swordsNames.Length)];
+
+            Sword swordToReturn = new Sword(new Position(currentX, currentY), swordDamage, swordDurability, swordName);
+            return swordToReturn;
+        }
+
+        private void PopulatePotions()
+        {
+            for (int i = 0; i < InitialNumberOfPotions; i++)
             {
                 Item item = this.CreateHealthPotion();
-                this.items.Add(item);
+                this.potions.Add(item);
+            }
+        }
+
+        private void PopulateSwords()
+        {
+            for (int i = 0; i < InitialNumberOfSwords; i++)
+            {
+                Item sword = this.CreateSword();
+                this.swords.Add(sword);
             }
         }
 
@@ -280,7 +342,9 @@ namespace RPGGame.Engine
 
                     Character enemy = this.enemies.FirstOrDefault(e => e.Position.X == col && e.Position.Y == row);
 
-                    Item item = this.items.FirstOrDefault(i => i.Position.X == col && i.Position.Y == row);
+                    Item item = this.potions.FirstOrDefault(i => i.Position.X == col && i.Position.Y == row);
+
+                    Item sword = this.swords.FirstOrDefault(s => s.Position.X == col && s.Position.Y == row);
 
                     if (enemy != null && enemy.Health > 0)
                     {
@@ -289,6 +353,10 @@ namespace RPGGame.Engine
                     else if (item != null && item.ItemState == ItemState.Available)
                     {
                         sb.Append(item.ObjectSymbol);
+                    }
+                    else if (sword != null && sword.ItemState == ItemState.Available)
+                    {
+                        sb.Append(sword.ObjectSymbol);
                     }
                     else
                     {
@@ -354,7 +422,7 @@ namespace RPGGame.Engine
                     }
                 }
 
-                Item item = this.items.FirstOrDefault(
+                Item item = this.potions.FirstOrDefault(
                     i => 
                         i.Position.X == this.player.Position.X 
                         && i.Position.Y == this.player.Position.Y
@@ -371,6 +439,24 @@ namespace RPGGame.Engine
                     }
                 }
 
+                Item sword = this.swords.FirstOrDefault(
+                    s =>
+                        s.Position.X == this.player.Position.X
+                        && s.Position.Y == this.player.Position.Y
+                        && s.ItemState == ItemState.Available
+                    );
+
+                if (sword != null && !this.player.HaveSword())
+                {
+                    string swordName = this.player.AddSwordToInventory(sword);
+                    sword.ItemState = ItemState.Collected;
+                    this.renderer.WriteLine("The sword {0} added to inventory !", swordName);
+                }
+                else if (sword != null && this.player.HaveSword())
+                {
+                    this.renderer.WriteLine("You already have sword equipped ! Return when you dont have weapon !");
+                }
+
                 this.renderer.WriteLine(String.Empty);
                 this.renderer.WriteLine(this.player.ToString());
                 this.renderer.WriteLine(String.Empty);
@@ -383,9 +469,9 @@ namespace RPGGame.Engine
             }
         }
 
-        private void ShowPlayerStatus()
+        private void ShowPlayerPotionsInfo()
         {
-            this.renderer.WriteLine(this.player.GetPlayerCurrentStatus());
+            this.renderer.WriteLine(this.player.GetPlayerPotionsInfo());
         }
 
         private void EnterBattle(ICharacter enemy)

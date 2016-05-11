@@ -19,6 +19,7 @@ namespace RPGGame.Characters
         private int level;
         private int levelUpCapIncreaseStep;
         private int playerMaximumHealth;
+        private int damage;
 
         private List<Item> inventory;
 
@@ -44,6 +45,26 @@ namespace RPGGame.Characters
         public IEnumerable<Item> Inventory
         {
             get { return this.inventory; }
+        }
+
+        public int Damage 
+        {
+            get
+            {
+                if (this.HaveSword())
+                {
+                    Sword equippedSword = this.GetTheSwordFromInventory();
+                    return this.damage + equippedSword.SwordDamage;
+                }
+                else
+                {
+                    return this.damage;
+                }                
+            }
+            set
+            {
+                this.damage = value;
+            }
         }
 
         public int Experiance
@@ -113,6 +134,25 @@ namespace RPGGame.Characters
             return currentHealthPotion.HealthPotionSize;
         }
 
+        public string AddSwordToInventory(Item item)
+        {
+            Sword currentSword = item as Sword;
+            this.inventory.Add(currentSword);
+            return currentSword.SwordName;
+        }
+
+        public bool HaveSword()
+        {
+            bool playerHaveSword = this.inventory.Exists(item => item is Sword);
+            return playerHaveSword;
+        }
+
+        private Sword GetTheSwordFromInventory()
+        {
+            Sword swordToReturn = this.inventory.Find(item => item is Sword) as Sword;
+            return swordToReturn;
+        }
+
         public void Heal(string potionType)
         {
             // Get from inventory health potion which have size specified by the player
@@ -169,18 +209,32 @@ namespace RPGGame.Characters
 
         public override string ToString()
         {
-            return string.Format("Player {0} ({1}): Damage ({2}), Health ({3}), Maximum health ({4}), Experiance ({5}), Experience needed for next level: ({6})",
-                this.Name,
-                this.Race,
-                this.Damage,
-                this.Health,
-                this.PlayerMaximumHealth,
-                this.Experiance,
-                this.LevelUpCap
-                );
+            string basicPlayerInfo = string.Format("Player {0} ({1}): Damage ({2}), Health ({3}), Maximum health ({4}), Experiance ({5}), Experience needed for next level: ({6})",
+                    this.Name,
+                    this.Race,
+                    this.Damage,
+                    this.Health,
+                    this.PlayerMaximumHealth,
+                    this.Experiance,
+                    this.LevelUpCap
+                    );
+
+            if (this.HaveSword())
+            {
+                Sword playerEquippedSword = this.GetTheSwordFromInventory();
+                return basicPlayerInfo + System.Environment.NewLine + string.Format("Sword info: Name ({0}), Damage ({1}), Durability ({2})",
+                    playerEquippedSword.SwordName,
+                    playerEquippedSword.SwordDamage,
+                    playerEquippedSword.SwordDurability
+                    );
+            }
+            else
+            {
+                return basicPlayerInfo;
+            }
         }
 
-        public string GetPlayerCurrentStatus()
+        public string GetPlayerPotionsInfo()
         {
             int smallPotionsCount = 0;
             int mediumPotionsCount = 0;
@@ -208,12 +262,7 @@ namespace RPGGame.Characters
                 }
             }
 
-            return string.Format("Player {0} ({1}): Experiance ({2}) Damage ({3}), Health ({4}), Health potions: ({5} Large, {6} Medium, {7} Small)",
-                this.Name,
-                this.Race,
-                this.Experiance,
-                this.Damage,
-                this.Health,
+            return string.Format("Health potions: ({0} Large, {1} Medium, {2} Small)",
                 largePotionsCount,
                 mediumPotionsCount,
                 smallPotionsCount
@@ -223,6 +272,17 @@ namespace RPGGame.Characters
         public override void Attack(ICharacter enemy)
         {
             enemy.Health -= this.Damage;
+
+            if (this.HaveSword())
+            {
+                Sword playerCurrentSword = this.GetTheSwordFromInventory();
+                playerCurrentSword.SwordDurability--;
+
+                if (playerCurrentSword.SwordDurability <= 0)
+                {
+                    this.inventory.Remove(playerCurrentSword);
+                }
+            }
         }
 
         public void GainExperience(ICharacter enemy)
@@ -259,7 +319,7 @@ namespace RPGGame.Characters
             switch (playerStatsBoostChoice)
             {
                 case "1":
-                    this.Damage += 30;
+                    this.damage += 30;
                     break;
                 case "2":
                     this.PlayerMaximumHealth += 30;
